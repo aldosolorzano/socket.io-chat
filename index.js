@@ -1,24 +1,25 @@
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const nsp = io.of('/barrio')
+const clients = [];
 
-
-app.get('/',(req,res)=>{
+app.get('/barrio',(req,res)=>{
   res.sendFile(__dirname + '/index.html')
-});
+})
 
-io.on('connection',(socket)=>{
-  console.log('User Connected');
-  // get messages
+nsp.on('connection',(socket)=>{
+  console.log('nsp user');
+
   socket.on('chat message',(msg)=>{
-    socket.broadcast.emit('chat message',msg)
-    // io.emit('chat message', msg)
+    // socket.broadcast.emit('barrio message',msg)
+    nsp.emit('chat message', msg)
   })
-  // disconnect
+
   socket.on('disconnect',()=>{
-    console.log('User Disconnected');
+    console.log('user disconnect');
   })
-});
+})
 
 http.listen(3000,()=>{
   console.log('Listening on port 3000');
