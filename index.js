@@ -1,26 +1,25 @@
-const app = require('express')();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-const nsp = io.of('/barrio')
-const clients = [];
+const express = require('express')
+const path = require('path')
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+var port = process.env.PORT || 3000;
 
-app.get('/barrio',(req,res)=>{
-  res.sendFile(__dirname + '/index.html')
-})
+server.listen(port, function () {
+  console.log('Server listening at port %d', port);
+});
 
-nsp.on('connection',(socket)=>{
+app.use(express.static(__dirname + '/public'));
+
+io.on('connection',(socket)=>{
   console.log('nsp user');
-
   socket.on('chat message',(msg)=>{
-    // socket.broadcast.emit('barrio message',msg)
-    nsp.emit('chat message', msg)
+    const {userName} = msg
+    const {message} = msg
+    io.emit('chat message',{userName,message})
   })
 
   socket.on('disconnect',()=>{
     console.log('user disconnect');
   })
 })
-
-http.listen(3000,()=>{
-  console.log('Listening on port 3000');
-});
