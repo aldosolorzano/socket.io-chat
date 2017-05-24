@@ -15,11 +15,13 @@
     </style>
   </head>
   <body>
+    <div><span><strong>Online users: </strong></span><span id="onlineUsers"></span></div>
+    <div id="userTyping"class=""></div>
     <ul id="messages"></ul>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      <input id="m" autocomplete="off" placeholder="Write a message" /><button>Send</button>
     </form>
-    
+
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/main.js"></script>
